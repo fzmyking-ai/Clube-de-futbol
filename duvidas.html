@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Regras e Informações - Arena Control</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --surface-color: #1f2833;
+            --surface-light: #2c3540;
+            --primary-color: #1fec70; /* Verde Neon */
+            --secondary-color: #05ce58;
+            --error-color: #ff3333;
+            --text-color: #c5c6c7;
+            --text-light: #ffffff;
+            --text-muted: #667484;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--surface-color);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-back:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            flex-grow: 1;
+        }
+
+        .info-section {
+            background-color: var(--surface-color);
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-section h2 {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .info-section h2 i {
+            color: var(--primary-color);
+        }
+
+        /* Estilo das Regras */
+        .rule-list {
+            list-style: none;
+        }
+
+        .rule-item {
+            background-color: var(--surface-light);
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .rule-number {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            font-weight: bold;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .rule-text strong {
+            color: var(--text-light);
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .rule-text p {
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        .rule-item.critical {
+            border-left-color: var(--error-color);
+        }
+        .rule-item.critical .rule-number {
+            color: var(--error-color);
+        }
+
+        /* Estilo dos Cards Informativos */
+        .info-block {
+            background-color: var(--surface-light);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .info-block h3 {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-block p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .badge-explain {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="btn-back" title="Voltar para o Painel">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1>Manual da Arena & Diretrizes</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="info-section">
+            <h2><i class="fas fa-gavel"></i> Regras Oficiais do Clube</h2>
+            <ul class="rule-list">
+                
+                <li class="rule-item">
+                    <div class="rule-number">1</div>
+                    <div class="rule-text">
+                        <strong>Frequência é Obrigatória</strong>
+                        <p>Evite faltar aos treinos. O atleta precisa manter a presença active para garantir sua vaga nas partidas e campeonatos internos.</p>
+                    </div>
+                </li>
+
+                <li class="rule-item">
+                    <div class="rule-number">2</div>
+                    <div class="rule-text">
+                        <strong>Respeito Mútuo Sempre</strong>
+                        <p>É obrigatório respeitar os colegas de equipe, adversários e a liderança. Ofensas, agressões verbais ou físicas resultam em punição imediata.</p>
+                    </div>
+                </li>
+
+                <li class="rule-item">
+                    <div class="rule-number">3</div>
+                    <div class="rule-text">
+                        <strong>Pontualidade com o Cronograma</strong>
+                        <p>Respeite rigorosamente os horários. O encerramento do jogo e recolhimento acontece cravado às <b>12:50</b>.</p>
+                    </div>
+                </li>
+
+                <li class="rule-item critical">
+                    <div class="rule-number">4</div>
+                    <div class="rule-text">
+                        <strong>Proibido Jogar Descalço</strong>
+                        <p>É estritamente proibido entrar em quadra sem calçado adequado. Motivo: Prevenção de lesões graves, pisões e cortes nos pés.</p>
+                    </div>
+                </li>
+
+                <li class="rule-item">
+                    <div class="rule-number">5</div>
+                    <div class="rule-text">
+                        <strong>Zelo pelo Material Esportivo</strong>
+                        <p>Bolas, coletes, cones e traves são bens de todos. Quem chutar a bola para longe busca, e ao final do treino todos ajudam a guardar.</p>
+                    </div>
+                </li>
+
+                <li class="rule-item">
+                    <div class="rule-number">6</div>
+                    <div class="rule-text">
+                        <strong>Espírito Esportivo (Fair Play)</strong>
+                        <p>Divididas duras fazem parte do futebol, mas a lealdade vem primeiro. Admita a falta e ajude o colega a se levantar.</p>
+                    </div>
+                </li>
+
+                <li class="rule-item critical">
+                    <div class="rule-number">7</div>
+                    <div class="rule-text">
+                        <strong>Decisão da Arbitragem/ADM</strong>
+                        <p>A palavra do Administrador do painel ou do árbitro do treino é final. Reclamações excessivas geram advertência (carinha triste).</p>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2><i class="fas fa-info-circle"></i> Informações Sobre o Painel</h2>
+            
+            <div class="info-block">
+                <h3><i class="fas fa-percentage"></i> Como funciona a Frequência?</h3>
+                <p>Sua frequência é calculada dividindo os treinos que você compareceu pelo total de treinos que o clube realizou. O limite mínimo aceitável é de <b>80%</b>.</p>
+                <div class="badge-explain" style="color: var(--error-color);">
+                    <i class="fas fa-times-circle"></i> Abaixo de 80% o painel exibirá: "TCHAU TCHAU"
+                </div>
+            </div>
+
+            <div class="info-block">
+                <h3><i class="fas fa-smile" style="color: #e5e916;"></i> O que é o Feedback Excelente?</h3>
+                <p>Dada a atletas que demonstraram liderança, fizeram jogadas de alto nível, mantiveram uma conduta exemplar ou ajudaram a equipe de forma excepcional.</p>
+            </div>
+
+            <div class="info-block">
+                <h3><i class="fas fa-frown" style="color: var(--error-color);"></i> O que é o Alerta de Indisciplina?</h3>
+                <p>Aplicado quando o jogador infringe alguma regra (palavrões, discussões, atrasos ou falta de cuidado com os materiais).</p>
+                <p style="margin-top: 5px; color: var(--primary-color); font-size: 0.8rem;">
+                    💡 <b>Dica:</b> Você pode clicar nos cards de carinhas no seu painel principal para ler os motivos e datas de cada avaliação!
+                </p>
+            </div>
+
+            <div class="info-block" style="border-left: 4px solid var(--error-color);">
+                <h3><i class="fas fa-exclamation-triangle" style="color: var(--error-color);"></i> Fechamento do Trimestre</h3>
+                <p>Ao final de cada trimestre, todo o histórico do atleta (presença, carinhas felizes e tristes) é enviado diretamente para a <b>Direção</b>.</p>
+                <p style="margin-top: 5px; color: var(--error-color); font-weight: bold;">
+                    ⚠️ Em caso de excesso de faltas ou acúmulo de carinhas tristes, o aluno será convidado a se retirar do clube.
+                </p>
+            </div>
+
+            <div class="info-block">
+                <h3><i class="fas fa-user-shield"></i> Quem gerencia este Painel?</h3>
+                <p>A gestão de dados, inscrições de novos atletas, avaliações e relatórios são controlados e validados exclusivamente pelo <b>Presidente</b>, <b>Vice-Presidente</b> e pelo <b>Coordenador</b> do clube.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+
