@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel - Clube de Futebol</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --surface-color: #1f2833;
+            --surface-light: #2c3540;
+            --primary-color: #1fec70; /* Verde Neon Esportivo */
+            --secondary-color: #05ce58;
+            --error-color: #ff3333;
+            --text-color: #c5c6c7;
+            --text-light: #ffffff;
+            --text-muted: #667484;
+            --warning-color: #ffb703;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ----- TELA DE LOGIN ----- */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .login-card {
+            background-color: var(--surface-color);
+            padding: 30px 20px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .login-card i.logo-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(31, 236, 112, 0.3));
+        }
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            color: var(--text-light);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--bg-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-block:hover { 
+            background-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(5, 206, 88, 0.4);
+        }
+
+        /* ----- APP PRINCIPAL ----- */
+        #main-app {
+            display: none;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        header {
+            background-color: var(--surface-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .header-btn:hover { color: var(--primary-color); }
+
+        .container {
+            padding: 15px;
+            max-width: 650px;
+            width: 100%;
+            margin: 0 auto;
+            flex-grow: 1;
+        }
+
+        /* ----- MURAL DE DESAFIOS ----- */
+        .mural-desafios {
+            background: linear-gradient(135deg, #1d2026, #11141a);
+            border: 1px dashed var(--primary-color);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .mural-desafios h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .desafio-card {
+            background-color: var(--surface-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        .desafio-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        .desafio-times {
+            color: var(--text-color);
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        /* ----- DASHBOARD DO ALUNO ----- */
+        .welcome-box {
+            background: linear-gradient(135deg, var(--surface-color), #111a24);
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: var(--surface-color);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .stat-card.clickable {
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .stat-card.clickable:hover {
+            transform: translateY(-2px);
+            background-color: var(--surface-light);
+        }
+
+        .stat-card.full-width { grid-column: span 2; }
+        .stat-card i { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+        .stat-card .value { font-size: 1.5rem; font-weight: bold; margin-bottom: 4px; color: var(--text-light); }
+        .stat-card .label { font-size: 0.75rem; color: var(--text-muted); }
+        .stat-card .click-hint { font-size: 0.65rem; color: var(--primary-color); margin-top: 5px; display: block; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .status-ok { background: rgba(31, 236, 112, 0.1); color: var(--primary-color); border: 1px solid var(--primary-color); }
+        .status-danger { background: rgba(255, 51, 51, 0.1); color: #ff6666; border: 1px solid var(--error-color); }
+
+        /* ----- VISTA DO ADMINISTRADOR ----- */
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: var(--surface-color);
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--surface-light);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .admin-section {
+            background-color: var(--surface-color);
+            padding: 20px 15px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attendance-container {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 15px;
+        }
+
+        .attendance-block {
+            background-color: var(--surface-light);
+            margin-bottom: 8px;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .attendance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .admin-input-reason {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        select.admin-select {
+            background-color: var(--surface-color);
+            color: var(--text-light);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        th { color: var(--text-muted); font-weight: 600; }
+        td { color: var(--text-light); }
+
+        .btn-action-del {
+            background: none;
+            border: none;
+            color: var(--error-color);
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 0.9rem;
+        }
+
+        .reason-list {
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .reason-item {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+        }
+        .reason-date {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Modal Ficha Técnica Estilização */
+        .modal-ficha-corpo {
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-light) !important;
+        }
+        .modal-ficha-foto {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            display: block;
+            margin: 0 auto 15px auto;
+            background-color: #111;
+        }
+        .ficha-row {
+            margin-bottom: 6px;
+            border-bottom: 1px solid #3d4754;
+            padding-bottom: 4px;
+        }
+        .ficha-label {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        /* --- PRINT LAYOUT --- */
+        #print-header-direcao {
+            display: none;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            #secao-admin-gestao { display: block !important; } /* Força o relatório a aparecer no PDF */
+            #secao-admin-diario { display: none !important; }
+            body { background: white !important; color: black !important; padding: 0; margin: 0; }
+            .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
+            #print-header-direcao { 
+                display: block !important; 
+                text-align: center; 
+                margin-bottom: 12px; 
+                border-bottom: 2px solid #000;
+                padding-bottom: 5px;
+            }
+            #print-header-direcao h2 { font-size: 1.3rem; color: #000; margin-bottom: 2px; }
+            #print-header-direcao p { font-size: 0.8rem; color: #444; }
+            .admin-section { background: white !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .admin-section h3 { display: none !important; }
+            .table-responsive { overflow: visible !important; }
+            table { width: 100% !important; border-collapse: collapse !important; font-size: 11px !important; color: #000 !important; }
+            th, td { border: 1px solid #000 !important; padding: 5px 6px !important; color: #000 !important; text-align: center !important; }
+            th { background-color: #eaeaea !important; font-weight: bold !important; text-transform: uppercase; font-size: 10px !important; }
+            td b { color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="print-header-direcao">
+        <h2>RELATÓRIO DE DESEMPENHO TRIMESTRAL</h2>
+        <p>Clube de Futebol Esportivo — Controle de Frequência, Produtividade e Conduta Disciplinar</p>
+    </div>
+
+    <div id="login-screen">
+        <div class="login-card">
+            <i class="fas fa-futbol logo-icon"></i>
+            <h2>Clube de Futebol - Login</h2>
+            
+            <div class="input-group">
+                <label for="login-nome">Nome Completo</label>
+                <input type="text" id="login-nome" placeholder=" ">
+            </div>
+            
+            <div class="input-group">
+                <label for="login-turma">Turma</label>
+                <input type="text" id="login-turma" placeholder=" ">
+            </div>
+
+            <div class="input-group">
+                <label for="login-senha">Data de Nascimento</label>
+                <input type="text" id="login-senha" placeholder="DD/MM/AAAA" maxlength="10">
+            </div>
+
+            <button class="btn-block" onclick="efetuarLogin()">Entrar no Sistema</button>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <header>
+            <button class="header-btn no-print" onclick="deslogar()" title="Sair"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            <h1>
+                <span>⚽ Clube de Futebol ⚽️</span>
+                <span class="subtitle" id="user-display-top">Carregando...</span>
+            </h1>
+            <div class="header-controls no-print">
+                <a href="ficha.html" class="header-btn" title="Fichas Técnicas dos Atletas" style="color: var(--primary-color); font-weight: bold; font-size: 0.95rem; margin-right: 5px;"><i class="fas fa-id-badge"></i> Fichas</a>
+                <a href="duvidas.html" class="header-btn" title="Manual da Arena & Regras"><i class="fas fa-book-open"></i></a>
+            </div>
+        </header>
+
+        <div class="container">
+
+            <div class="mural-desafios no-print">
+                <h3><i class="fas fa-calendar-alt"></i> Amistosos Agendados</h3>
+                <div id="container-desafios-lista">
+                    <p style="font-size:0.8rem; color:var(--text-muted);">Nenhum amistoso ou confronto agendado no momento.</p>
+                </div>
+            </div>
+            
+            <div id="view-aluno">
+                <div class="welcome-box">
+                    <h2 style="font-size: 1.2rem; color: var(--text-light);">Olá, <span id="student-name-welcome">Jogador</span>!</h2>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 3px;">Acompanhe abaixo seu rendimento e frequência no clube.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card clickable full-width" onclick="verMinhaFichaCompleta()" style="border: 1px solid var(--primary-color); background: linear-gradient(145deg, #1f2833, #151d26);">
+                        <i class="fas fa-id-card" style="color: var(--primary-color); font-size: 2rem;"></i>
+                        <div class="value" style="font-size: 1.15rem; color: var(--text-light);">Minha Ficha Técnica</div>
+                        <div class="label" style="color: var(--primary-color);">Toque para abrir seus dados completos</div>
+                    </div>
+
+                    <div class="stat-card full-width">
+                        <i class="fas fa-percentage" style="color: var(--primary-color);"></i>
+                        <div class="value" id="stat-frequencia">0%</div>
+                        <div class="label">Frequência Trimestral</div>
+                        <div id="stat-status-badge"></div>
+                    </div>
+                    
+                    <div class="stat-card clickable" onclick="verMotivosConduta('feliz')">
+                        <i class="fas fa-smile" style="color: #e5e916;"></i>
+                        <div class="value" id="stat-felizes">0</div>
+                        <div class="label">Rostos Felizes</div>
+                        <span class="click-hint">Ver motivos</span>
+                    </div>
+
+                    <div class="stat-card clickable" onclick="verMotivosConduta('triste')">
+                        <i class="fas fa-frown" style="color: var(--error-color);"></i>
+                        <div class="value" id="stat-tristes">0</div>
+                        <div class="label">Rostos Tristes</div>
+                        <span class="click-hint">Ver motivos</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check" style="color: var(--primary-color);"></i>
+                        <div class="value" id="stat-presencas">0</div>
+                        <div class="label">Presenças Confirmadas</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <i class="fas fa-clipboard" style="color: var(--text-muted);"></i>
+                        <div class="value" id="stat-totais">0</div>
+                        <div class="label">Aulas Totais do Time</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-admin" style="display: none;">
+                
+                <div class="admin-tabs no-print">
+                    <button id="tab-btn-diario" class="tab-btn active" onclick="alternarAbaAdmin('diario')"><i class="fas fa-running"></i> Treino & Amistosos</button>
+                    <button id="tab-btn-gestao" class="tab-btn" onclick="alternarAbaAdmin('gestao')"><i class="fas fa-chart-pie"></i> Relatório & Gestão</button>
+                </div>
+
+                <div id="secao-admin-diario">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-trophy"></i> Organizar Amistoso</h3>
+                        <button class="btn-block" onclick="abrirModalCriarDesafio()" style="background-color: var(--warning-color); color: #000; margin-top:0;"><i class="fas fa-plus-circle"></i> Marcar Amistoso (5 vs 5)</button>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3><i class="fas fa-check-square"></i> Chamada do Dia / Diário de Treino</h3>
+                        <div class="attendance-container" id="lista-chamada-dinamica"></div>
+                        <button class="btn-block" onclick="salvarChamadaDia()" style="background-color: var(--primary-color); color: #000;"><i class="fas fa-save"></i> Gravar Chamada e Ocorrências</button>
+                    </div>
+                </div>
+
+                <div id="secao-admin-gestao" style="display: none;">
+                    <div class="admin-section">
+                        <h3 class="no-print">
+                            <span><i class="fas fa-chart-bar"></i> Visão Trimestral Completa</span>
+                            <button class="header-btn" onclick="window.print()" title="Exportar PDF/Imprimir para Direção" style="font-size: 0.95rem; color: var(--primary-color); font-weight: bold; border: 1px solid rgba(31,236,112,0.3); padding: 5px 10px; border-radius: 6px;"><i class="fas fa-print"></i> Exportar PDF</button>
+                        </h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Aluno / Atleta</th>
+                                        <th>Turma</th>
+                                        <th>Freq %</th>
+                                        <th>😊</th>
+                                        <th>🙁</th>
+                                        <th>Status</th>
+                                        <th class="no-print">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabela-corpo-relatorio"></tbody>
+                            </table>
+                        </div>
+                        <button class="btn-block btn-danger no-print" onclick="resetarTrimestreGeral()" style="background-color: var(--error-color); color: white; margin-top:20px; font-size: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> Limpar Histórico do Trimestre</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, update, get, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAizAqZX83G_Ho_8DRyPjXhsHMFCYrFO34",
+          authDomain: "testes-kaua.firebaseapp.com",
+          databaseURL: "https://testes-kaua-default-rtdb.firebaseio.com",
+          projectId: "testes-kaua",
+          storageBucket: "testes-kaua.firebasestorage.app",
+          messagingSenderId: "800727439704",
+          appId: "1:800727439704:web:f3035c4974c313dacf6d2d",
+          measurementId: "G-2RXM966CEK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let usuarioLogado = null;
+        let listaGlobalAlunos = [];
+        let listaGlobalAulas = [];
+
+        function tocarSomClique() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1);
+            } catch(e) {}
+        }
+
+        function tocarApitoJuiz() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1200, ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(1300, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch(e) {}
+        }
+
+        document.addEventListener('click', (e) => {
+            if(e.target.tagName === 'BUTTON' || e.target.classList.contains('clickable') || e.target.tagName === 'A' || e.target.closest('.tab-btn')) {
+                tocarSomClique();
+            }
+        });
+
+        function aplicarMascaraData(inputElement) {
+            inputElement.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+                if (v.length >= 5) {
+                    v = `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
+                } else if (v.length >= 3) {
+                    v = `${v.slice(0, 2)}/${v.slice(2)}`;
+                }
+                e.target.value = v;
+            });
+        }
+        aplicarMascaraData(document.getElementById('login-senha'));
+
+        function gerarChaveUsuario(nome, turma) {
+            const limpoNome = nome.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            const limpoTurma = turma.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            return `${limpoNome}_${limpoTurma}`;
+        }
+
+        // CONTROLADOR DE ABAS DA TELA ADM CORRIGIDO
+        window.alternarAbaAdmin = function(aba) {
+            const btnDiario = document.getElementById('tab-btn-diario');
+            const btnGestao = document.getElementById('tab-btn-gestao');
+            const secDiario = document.getElementById('secao-admin-diario');
+            const secGestao = document.getElementById('secao-admin-gestao');
+
+            if(aba === 'diario') {
+                btnDiario.classList.add('active');
+                btnGestao.classList.remove('active');
+                secDiario.style.display = 'block';
+                secGestao.style.display = 'none'; // Corrigido aqui para ocultar por completo
+            } else {
+                btnGestao.classList.add('active');
+                btnDiario.classList.remove('active');
+                secDiario.style.display = 'none';
+                secGestao.style.display = 'block';
+            }
+        }
+
+        async function executarAutoCadastroKaua() {
+            const seuNome = "Kauã Nunes Do Nascimento";
+            const suaTurma = "111";
+            const suaChave = gerarChaveUsuario(seuNome, suaTurma);
+            
+            try {
+                const check = await get(ref(db, `clube_futebol/usuarios/${suaChave}`));
+                if (!check.exists()) {
+                    await set(ref(db, `clube_futebol/usuarios/${suaChave}`), {
+                        nome: seuNome,
+                        turma: suaTurma,
+                        nascimento: "17/12/2010", 
+                        role: "adm"
+                    });
+                }
+            } catch(e) {
+                console.log(e);
+            }
+        }
+
+        window.efetuarLogin = async function() {
+            const nome = document.getElementById('login-nome').value.trim();
+            const turma = document.getElementById('login-turma').value.trim();
+            const dataNascimento = document.getElementById('login-senha').value;
+
+            if(!nome || !turma || !dataNascimento || dataNascimento.length < 10) {
+                Swal.fire('Atenção', 'Preencha todos os campos corretamente!', 'warning');
+                return;
+            }
+
+            const chaveUser = gerarChaveUsuario(nome, turma);
+            Swal.showLoading();
+
+            try {
+                const snapshot = await get(ref(db, `clube_futebol/usuarios/${chaveUser}`));
+                if (snapshot.exists()) {
+                    const dadosDB = snapshot.val();
+                    
+                    if (dadosDB.nascimento === dataNascimento) {
+                        usuarioLogado = dadosDB;
+                        usuarioLogado.chave = chaveUser;
+                        
+                        tocarApitoJuiz();
+                        Swal.fire({ icon: 'success', title: 'Acesso Autorizado!', text: `Bem-vindo, ${dadosDB.nome}!`, timer: 1500, showConfirmButton: false });
+                        localStorage.setItem('sessao_user_chave', chaveUser);
+                        inicializarPainel();
+                    } else {
+                        Swal.fire('Erro', 'Data de nascimento incorreta.', 'error');
+                    }
+                } else {
+                    Swal.fire('Não encontrado', 'Aluno não cadastrado no clube.', 'error');
+                }
+            } catch (err) {
+                Swal.fire('Erro no Banco', 'Falha ao conectar.', 'error');
+            }
+        };
+
+        function inicializarPainel() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            
+            document.getElementById('user-display-top').innerText = `${usuarioLogado.nome} [${usuarioLogado.turma}]`;
+            document.getElementById('student-name-welcome').innerText = usuarioLogado.nome;
+
+            onValue(ref(db, 'clube_futebol/usuarios'), (snapshot) => {
+                listaGlobalAlunos = [];
+                if(snapshot.exists()){
+                    const obj = snapshot.val();
+                    Object.keys(obj).forEach(key => {
+                        listaGlobalAlunos.push({ idChave: key, ...obj[key] });
+                    });
+
+                    listaGlobalAlunos.sort((a, b) => {
+                        const compTurma = a.turma.toString().localeCompare(b.turma.toString(), 'pt-BR', { numeric: true });
+                        if (compTurma !== 0) return compTurma;
+                        return a.nome.localeCompare(b.nome, 'pt-BR');
+                    });
+                }
+                processarEGerarEstatisticas();
+            });
+
+            onValue(ref(db, 'clube_futebol/aulas'), (snapshot) => {
+                listaGlobalAulas = [];
+                if(snapshot.exists()){
+                    const obj = snapshot.val();
+                    Object.keys(obj).forEach(key => {
+                        listaGlobalAulas.push({ idAula: key, dados: obj[key] });
+                    });
+                }
+                processarEGerarEstatisticas();
+            });
+
+            onValue(ref(db, 'clube_futebol/desafios'), (snapshot) => {
+                renderizarMuralDesafios(snapshot.val());
+            });
+
+            if(usuarioLogado.role === 'adm') {
+                document.getElementById('view-admin').style.display = 'block';
+                alternarAbaAdmin('diario'); 
+            } else {
+                document.getElementById('view-admin').style.display = 'none';
+            }
+        }
+
+        // MURAL DE AMISTOSOS ATUALIZADO (EXIBE MÚLTIPLOS E ADICIONA BOTÃO DE EXCLUIR PRO ADM)
+        function renderizarMuralDesafios(dadosDesafios) {
+            const wrapper = document.getElementById('container-desafios-lista');
+            wrapper.innerHTML = "";
+            if(!dadosDesafios) {
+                wrapper.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Nenhum amistoso ou confronto agendado no momento.</p>`;
+                return;
+            }
+
+            const hojeMeiaNoite = new Date().setHours(0,0,0,0);
+            const chavesOrdenadas = Object.keys(dadosDesafios).sort();
+            let contadorExibidos = 0;
+
+            for (let id of chavesOrdenadas) {
+                const desafio = dadosDesafios[id];
+                const dataPartidaMs = new Date(desafio.dataRaw + "T00:00:00").getTime();
+
+                if (hojeMeiaNoite - dataPartidaMs > 2 * 24 * 60 * 60 * 1000) {
+                    remove(ref(db, `clube_futebol/desafios/${id}`));
+                    continue;
+                }
+
+                contadorExibidos++;
+
+                let avisoProximidade = "";
+                const hojeFormatado = new Date().toLocaleDateString('pt-BR');
+                const amanha = new Date();
+                amanha.setDate(new Date().getDate() + 1);
+                const amanhaFormatado = amanha.toLocaleDateString('pt-BR');
+
+                if (desafio.data === hojeFormatado) {
+                    avisoProximidade = `<span style="color:var(--error-color); font-weight:bold;">🔥 É HOJE!</span>`;
+                } else if (desafio.data === amanhaFormatado) {
+                    avisoProximidade = `<span style="color:var(--warning-color); font-weight:bold;">⚠️ AMANHÃ!</span>`;
+                }
+
+                let btnExcluirAdmin = "";
+                if(usuarioLogado && usuarioLogado.role === 'adm') {
+                    btnExcluirAdmin = `
+                        <button onclick="removerAmistosoMural('${id}')" style="background:none; border:none; color:var(--error-color); cursor:pointer; font-size:1rem;" title="Apagar Amistoso">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    `;
+                }
+
+                wrapper.innerHTML += `
+                    <div class="desafio-card">
+                        <div class="desafio-header" style="padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px;">
+                            <span>🏆 Amistoso Confirmado ${avisoProximidade}</span>
+                            ${btnExcluirAdmin}
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Data do Confronto: <b>${desafio.data}</b></div>
+                        <div class="desafio-times" style="background: rgba(255, 51, 51, 0.05); padding: 8px; border-radius: 6px; border-left: 3px solid var(--error-color);">
+                            🔴 <b>Capitão Vermelho:</b> ${desafio.cap1}<br>
+                            <div style="margin-top: 4px; font-size: 0.8rem; color: var(--text-light);">${desafio.time1}</div>
+                        </div>
+                        <div style="text-align:center; font-weight:bold; color:var(--primary-color); margin:6px 0;">VS</div>
+                        <div class="desafio-times" style="background: rgba(31, 236, 112, 0.05); padding: 8px; border-radius: 6px; border-left: 3px solid var(--primary-color);">
+                            🔵 <b>Capitão Azul:</b> ${desafio.cap2}<br>
+                            <div style="margin-top: 4px; font-size: 0.8rem; color: var(--text-light);">${desafio.time2}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if(contadorExibidos === 0) {
+                wrapper.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Nenhum amistoso ou confronto agendado no momento.</p>`;
+            }
+        }
+
+        window.removerAmistosoMural = function(idDesafio) {
+            Swal.fire({
+                title: 'Remover Amistoso?',
+                text: "Deseja apagar este agendamento do mural?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--error-color)',
+                confirmButtonText: 'Sim, Deletar',
+                background: 'var(--surface-color)',
+                color: 'var(--text-light)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    remove(ref(db, `clube_futebol/desafios/${idDesafio}`)).then(() => {
+                        Swal.fire('Removido!', 'O amistoso foi retirado do sistema.', 'success');
+                    });
+                }
+            });
+        }
+
+        window.abrirModalCriarDesafio = function() {
+            window._listaTime1 = [];
+            window._listaTime2 = [];
+
+            Swal.fire({
+                title: 'Agendar Amistoso (5 vs 5)',
+                background: 'var(--surface-color)',
+                color: 'var(--text-light)',
+                html: `
+                    <div style="text-align:left; margin-bottom:10px;">
+                        <label style="font-size:0.75rem; color:var(--error-color); font-weight:bold;">❤️ TIME VERMELHO</label>
+                        <input id="desafio-cap1" class="swal2-input" style="width:100%; margin:4px 0; background:#0b0c10; color:#fff;" placeholder="Nome do Capitão Vermelho">
+                        
+                        <div id="preview-time1" style="margin: 6px 0; font-size:0.85rem; color:#ff6666; line-height:1.4; background:rgba(0,0,0,0.2); padding:5px; border-radius:5px;"></div>
+                        <div style="display:flex; gap:5px;">
+                            <input id="input-jogador1" class="swal2-input" style="flex:1; margin:0; font-size:0.85rem; background:#0b0c10; color:#fff;" placeholder="Adicione jogador do time Vermelho">
+                            <button type="button" id="btn-add-j1" style="background:var(--surface-light); color:#fff; padding:0 15px; border:1px solid #555; border-radius:6px; font-weight:bold;">+</button>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
+                    <div style="text-align:left; margin-bottom:10px;">
+                        <label style="font-size:0.75rem; color:var(--primary-color); font-weight:bold;">💙 TIME AZUL</label>
+                        <input id="desafio-cap2" class="swal2-input" style="width:100%; margin:4px 0; background:#0b0c10; color:#fff;" placeholder="Nome do Capitão Azul">
+                        
+                        <div id="preview-time2" style="margin: 6px 0; font-size:0.85rem; color:var(--primary-color); line-height:1.4; background:rgba(0,0,0,0.2); padding:5px; border-radius:5px;"></div>
+                        <div style="display:flex; gap:5px;">
+                            <input id="input-jogador2" class="swal2-input" style="flex:1; margin:0; font-size:0.85rem; background:#0b0c10; color:#fff;" placeholder="Adicione jogador do time Azul">
+                            <button type="button" id="btn-add-j2" style="background:var(--surface-light); color:#fff; padding:0 15px; border:1px solid #555; border-radius:6px; font-weight:bold;">+</button>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
+                    <div style="text-align:left; margin-bottom:10px;">
+                        <label style="font-size:0.75rem; color:var(--text-muted); font-weight:bold;">DATA DA PARTIDA</label>
+                        <input id="desafio-data" type="date" class="swal2-input" style="width:100%; margin:4px 0; background:#0b0c10; color:#fff;">
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: 'var(--primary-color)',
+                confirmButtonText: 'Lançar no Mural',
+                cancelButtonText: 'Cancelar',
+                didOpen: () => {
+                    const inp1 = document.getElementById('input-jogador1');
+                    const btn1 = document.getElementById('btn-add-j1');
+                    const view1 = document.getElementById('preview-time1');
+                    
+                    const inp2 = document.getElementById('input-jogador2');
+                    const btn2 = document.getElementById('btn-add-j2');
+                    const view2 = document.getElementById('preview-time2');
+
+                    const addJogador1 = () => {
+                        const nome = inp1.value.trim();
+                        if (nome && window._listaTime1.length < 5) {
+                            window._listaTime1.push(nome);
+                            view1.innerHTML = window._listaTime1.map(j => `• ${j}`).join('<br>');
+                            inp1.value = "";
+                            inp1.focus();
+                        } else if(window._listaTime1.length >= 5) {
+                            Swal.showValidationMessage('Limite de 5 jogadores atingido no Time Vermelho!');
+                        }
+                    };
+
+                    const addJogador2 = () => {
+                        const nome = inp2.value.trim();
+                        if (nome && window._listaTime2.length < 5) {
+                            window._listaTime2.push(nome);
+                            view2.innerHTML = window._listaTime2.map(j => `• ${j}`).join('<br>');
+                            inp2.value = "";
+                            inp2.focus();
+                        } else if(window._listaTime2.length >= 5) {
+                            Swal.showValidationMessage('Limite de 5 jogadores atingido no Time Azul!');
+                        }
+                    };
+
+                    btn1.addEventListener('click', addJogador1);
+                    inp1.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addJogador1();
+                        }
+                    });
+
+                    btn2.addEventListener('click', addJogador2);
+                    inp2.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addJogador2();
+                        }
+                    });
+                },
+                preConfirm: () => {
+                    const cap1 = document.getElementById('desafio-cap1').value.trim();
+                    const cap2 = document.getElementById('desafio-cap2').value.trim();
+                    const dataRaw = document.getElementById('desafio-data').value;
+
+                    if (!cap1 || !cap2 || !dataRaw) {
+                        Swal.showValidationMessage('Defina os dois Capitães e a Data do jogo!');
+                        return false;
+                    }
+
+                    const time1Formatado = window._listaTime1.length > 0 ? window._listaTime1.map(j => `• ${j}`).join('<br>') : "Nenhum atleta listado";
+                    const time2Formatado = window._listaTime2.length > 0 ? window._listaTime2.map(j => `• ${j}`).join('<br>') : "Nenhum atleta listado";
+
+                    const partesData = dataRaw.split('-');
+                    const dataFormatada = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
+
+                    return { cap1, time1: time1Formatado, cap2, time2: time2Formatado, data: dataFormatada, dataRaw };
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    const idDesafio = 'desafio_' + Date.now();
+                    set(ref(db, `clube_futebol/desafios/${idDesafio}`), result.value).then(() => {
+                        tocarApitoJuiz();
+                        Swal.fire('Sucesso!', 'O amistoso foi publicado com sucesso no mural!', 'success');
+                    });
+                }
+            });
+        };
+
+        // VISUALIZAÇÃO DA FICHA TÉCNICA REPARADA (CORES CORRIGIDAS CONTRA FUNDO BRANCO)
+        window.verMinhaFichaCompleta = function() {
+            const fichaAtleta = listaGlobalAlunos.find(a => a.idChave === usuarioLogado.chave);
+            const alvo = fichaAtleta || usuarioLogado;
+
+            const fotoUrl = alvo.fotoBase64 || "https://api.dicebear.com/7.x/sports/svg?seed=" + encodeURIComponent(alvo.nome);
+            const apelidoStr = alvo.apelido ? alvo.apelido : "Nenhum cadastrado";
+            const idadeStr = alvo.idade ? `${alvo.idade} anos` : "Não informada";
+            const whatsStr = alvo.whatsapp ? alvo.whatsapp : "Não informado";
+            const instaStr = alvo.instagram ? alvo.instagram : "Não informado";
+            const pernaStr = alvo.perna ? alvo.perna : "Direita";
+            const pos1Str = alvo.posicao1 ? alvo.posicao1 : "Não definida";
+            const pos2Str = alvo.posicao2 ? alvo.posicao2 : "Nenhuma segunda opção";
+            const roupaStr = alvo.roupa ? alvo.roupa : "M";
+            const calcadoStr = alvo.calcado ? alvo.calcado : "Não informado";
+            
+            const restrStr = alvo.restricaoOpcao === 'Sim' ? `⚠️ Sim: ${alvo.restricaoQual}` : "✅ Não possui restrições médicas";
+            const medStr = alvo.medicamentoOpcao === 'Sim' ? `💊 Sim: ${alvo.medicamentoQual}` : "✅ Não utiliza medicamentos";
+
+            Swal.fire({
+                title: 'Minha Ficha Técnica Oficial',
+                background: 'var(--surface-color)',
+                color: 'var(--text-light)',
+                html: `
+                    <div class="modal-ficha-corpo">
+                        <img class="modal-ficha-foto" src="${fotoUrl}" alt="Foto Atleta">
+                        
+                        <div class="ficha-row">
+                            <span class="ficha-label">Nome Completo</span>
+                            <b>${alvo.nome}</b>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Apelido</span>
+                            <span>${apelidoStr}</span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Turma / Grupo</span>
+                            <b>${alvo.turma}</b>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Idade / Nascimento</span>
+                            <span>${idadeStr} (${alvo.nascimento})</span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Contatos e Redes</span>
+                            <span>WhatsApp: ${whatsStr} | Insta: ${instaStr}</span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Perna Dominante</span>
+                            <span>${pernaStr}</span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Posição Principal</span>
+                            <b style="color:var(--primary-color);">${pos1Str}</b>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Segunda Opção</span>
+                            <span>${pos2Str}</span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Uniforme / Tamanhos</span>
+                            <span>Roupa: <b>${roupaStr}</b> | Calçado: <b>${calcadoStr}</b></span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Ficha de Restrição Médica</span>
+                            <span>${restrStr}</span>
+                        </div>
+                        <div class="ficha-row">
+                            <span class="ficha-label">Uso de Medicamentos</span>
+                            <span>${medStr}</span>
+                        </div>
+                    </div>
+                `,
+                showConfirmButton: true,
+                confirmButtonText: 'Fechar Ficha',
+                confirmButtonColor: 'var(--surface-light)'
+            });
+        };
+
+        function processarEGerarEstatisticas() {
+            const totalAulas = listaGlobalAulas.length;
+            let presencasLogado = 0, felizesLogado = 0, tristesLogado = 0;
+
+            listaGlobalAulas.forEach(aula => {
+                const registro = aula.dados[usuarioLogado.chave];
+                if(registro) {
+                    if(registro.presenca === 'presenca') presencasLogado++;
+                    if(registro.conduta === 'feliz') felizesLogado++;
+                    if(registro.conduta === 'triste') tristesLogado++;
+                }
+            });
+
+            let freqPorcentagemLogado = totalAulas > 0 ? ((presencasLogado / totalAulas) * 100).toFixed(1) : 100;
+            
+            document.getElementById('stat-frequencia').innerText = `${freqPorcentagemLogado}%`;
+            document.getElementById('stat-felizes').innerText = felizesLogado;
+            document.getElementById('stat-tristes').innerText = tristesLogado;
+            document.getElementById('stat-presencas').innerText = presencasLogado;
+            document.getElementById('stat-totais').innerText = totalAulas;
+
+            const badgeBox = document.getElementById('stat-status-badge');
+            if(totalAulas > 0 && freqPorcentagemLogado < 80) {
+                badgeBox.innerHTML = `<span class="status-badge status-danger"><i class="fas fa-exclamation-triangle"></i> Abaixo do limite (Mín. 80%)</span>`;
+            } else {
+                badgeBox.innerHTML = `<span class="status-badge status-ok"><i class="fas fa-check-circle"></i> Regular no Clube</span>`;
+            }
+
+            if(usuarioLogado.role === 'adm') {
+                renderizarChamadaADM();
+                renderizarRelatorioADM(totalAulas);
+            }
+        }
+
+        window.verMotivosConduta = function(tipo) {
+            let htmlMotivos = `<div class="reason-list">`;
+            let encontrouAlgum = false;
+
+            listaGlobalAulas.forEach(aula => {
+                const registro = aula.dados[usuarioLogado.chave];
+                if(registro && registro.conduta === tipo) {
+                    encontrouAlgum = true;
+                    const timestampStr = aula.idAula.split('_')[1];
+                    const dataFormatada = new Date(parseInt(timestampStr)).toLocaleDateString('pt-BR');
+                    const textoMotivo = registro.motivo || "Nenhum motivo específico detalhado pelo professor.";
+                    
+                    htmlMotivos += `
+                        <div class="reason-item">
+                            <span class="reason-date">${dataFormatada}:</span> ${textoMotivo}
+                        </div>
+                    `;
+                }
+            });
+
+            htmlMotivos += `</div>`;
+
+            if(!encontrouAlgum) {
+                htmlMotivos = `<p style="color:var(--text-muted); padding:10px;">Nenhum registro de carinha encontrado para esta categoria.</p>`;
+            }
+
+            Swal.fire({
+                title: tipo === 'feliz' ? '😊 Feedbacks Excelentes' : '🙁 Ocorrências / Indisciplina',
+                background: 'var(--surface-color)',
+                color: 'var(--text-light)',
+                html: htmlMotivos,
+                showConfirmButton: true,
+                confirmButtonText: 'Fechar',
+                confirmButtonColor: 'var(--surface-light)'
+            });
+        };
+
+        function renderizarChamadaADM() {
+            const wrapper = document.getElementById('lista-chamada-dinamica');
+            wrapper.innerHTML = "";
+            if(listaGlobalAlunos.length === 0) return;
+
+            listaGlobalAlunos.forEach(aluno => {
+                wrapper.innerHTML += `
+                    <div class="attendance-block">
+                        <div class="attendance-row">
+                            <div style="max-width: 50%;">
+                                <strong style="color:var(--text-light);">${aluno.nome}</strong><br>
+                                <span style="font-size:0.7rem; color:var(--text-muted);">Turma: <b>${aluno.turma}</b></span>
+                            </div>
+                            <div style="display:flex; gap: 5px;">
+                                <select id="chamada_presenca_${aluno.idChave}" class="admin-select">
+                                    <option value="presenca">✔ Presença</option>
+                                    <option value="falta">❌ Falta</option>
+                                </select>
+                                <select id="chamada_conduta_${aluno.idChave}" class="admin-select">
+                                    <option value="neutro">➖ Normal</option>
+                                    <option value="feliz">😊 Excelente</option>
+                                    <option value="triste">🙁 Indisciplina</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="text" id="chamada_motivo_${aluno.idChave}" class="admin-input-reason" placeholder="Opcional: Motivo da avaliação de conduta">
+                    </div>
+                `;
+            });
+        }
+
+        window.salvarChamadaDia = function() {
+            if (listaGlobalAlunos.length === 0) return;
+            const timestampID = 'aula_' + Date.now();
+            const dadosAula = {};
+
+            listaGlobalAlunos.forEach(aluno => {
+                const p = document.getElementById(`chamada_presenca_${aluno.idChave}`).value;
+                const c = document.getElementById(`chamada_conduta_${aluno.idChave}`).value;
+                const m = document.getElementById(`chamada_motivo_${aluno.idChave}`).value.trim();
+                dadosAula[aluno.idChave] = { presenca: p, conduta: c, motivo: m };
+            });
+
+            set(ref(db, `clube_futebol/aulas/${timestampID}`), dadosAula).then(() => {
+                tocarApitoJuiz();
+                Swal.fire('Sucesso!', 'Os dados do treino e chamada foram gravados!', 'success');
+            });
+        };
+
+        function renderizarRelatorioADM(totalAulas) {
+            const corpo = document.getElementById('tabela-corpo-relatorio');
+            corpo.innerHTML = "";
+
+            listaGlobalAlunos.forEach(aluno => {
+                let pCont = 0, fCont = 0, tCont = 0;
+                listaGlobalAulas.forEach(aula => {
+                    const r = aula.dados[aluno.idChave];
+                    if(r) {
+                        if(r.presenca === 'presenca') pCont++;
+                        if(r.conduta === 'feliz') fCont++;
+                        if(r.conduta === 'triste') tCont++;
+                    }
+                });
+
+                let pCent = totalAulas > 0 ? ((pCont / totalAulas) * 100).toFixed(0) : 100;
+                let statusTxt = pCent >= 80 ? `<b style="color:var(--primary-color)">OK</b>` : `<b style="color:var(--error-color)">REPROVADO</b>`;
+
+                corpo.innerHTML += `
+                    <tr>
+                        <td style="text-align: left;"><b>${aluno.nome}</b></td>
+                        <td>${aluno.turma}</td>
+                        <td>${pCent}%</td>
+                        <td><b>${fCont}</b></td>
+                        <td><b>${tCont}</b></td>
+                        <td>${statusTxt}</td>
+                        <td class="no-print">
+                            <button class="btn-action-del" onclick="removerAlunoDoClube('${aluno.idChave}', '${aluno.nome}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.removerAlunoDoClube = function(idChave, nomeCompleto) {
+            Swal.fire({
+                title: 'Remover Atleta?',
+                text: `Deseja desativar permanentemente a inscrição de ${nomeCompleto}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--error-color)',
+                confirmButtonText: 'Sim, Remover',
+                cancelButtonText: 'Cancelar',
+                background: 'var(--surface-color)',
+                color: 'var(--text-light)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    remove(ref(db, `clube_futebol/usuarios/${idChave}`)).then(() => {
+                        Swal.fire('Removido', 'Inscrição arquivada com sucesso.', 'success');
+                    });
+                }
+            });
+        };
+
+        window.resetarTrimestreGeral = function() {
+            Swal.fire({
+                title: 'Tem certeza absoluta?',
+                text: "Esta ação apagará todo o histórico de aulas e presenças do trimestre atual!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--error-color)',
+                confirmButtonText: 'Sim, resetar dados',
+                background: 'var(--surface-color)',
+                color: 'var(--text-light)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    remove(ref(db, 'clube_futebol/aulas')).then(() => {
+                        Swal.fire('Resetado!', 'O histórico do trimestre foi limpo.', 'success');
+                    });
+                }
+            });
+        };
+
+        window.deslogar = function() {
+            localStorage.removeItem('sessao_user_chave');
+            window.location.reload();
+        };
+
+        async function verificarSessao() {
+            await executarAutoCadastroKaua(); 
+            const salva = localStorage.getItem('sessao_user_chave');
+            if(salva) {
+                const s = await get(ref(db, `clube_futebol/usuarios/${salva}`));
+                if(s.exists()){
+                    usuarioLogado = s.val();
+                    usuarioLogado.chave = salva;
+                    inicializarPainel();
+                }
+            }
+        }
+        verificarSessao();
+    </script>
+</body>
+</html>
